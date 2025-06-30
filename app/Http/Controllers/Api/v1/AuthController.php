@@ -22,26 +22,93 @@ class AuthController extends Controller
 
         $this->loginValidate($credentials);
 
-        $this->authenticate($credentials);
+        return $this->authenticate($credentials);
     }
 
     public function register(Request $request)
     {
-        $data = $request->only(["name", "password", "email"]);
+        $this->registerValidate($request->all());
 
-        $this->validateRegister($data);
-
-        User::create([
+        $user = User::create([
             "name" => $request->name,
-            "password" => $request->email,
-            "email" => bcrypt($request->password)
+            "email" => $request->email,
+            "password" => bcrypt($request->password)
         ]);
 
-        $this->authenticate($request->only(["email", "password"]));
+        return response()->json(["status" => "success", "user" => $user]);
     }
 
     public function logout(Request $request)
     {
-        $this->tokenValidate($request->only(["token"]));
+        $this->tokenValidate($request->all());
+        return $this->disconnect();
+    }
+
+    public function me()
+    {
+        return response()->json(auth()->user());
+    }
+
+    protected function loginValidate($data)
+    {
+        Validator::make($data, [
+            "email" => "required|email",
+            "password" => "required|min:8"
+        ])->validate();
+    }
+
+    protected function registerValidate(array $data)
+    {
+        Validator::make($data, [
+            "name" => "required|string",
+            "email" => "required|email|unique:users",
+            "password" => "required|min:8"
+        ])->validate();
+    }
+
+    protected function tokenValidate($data)
+    {
+        Validator::make($data, [
+            "token" => "required",
+        ])->validate();
+    }
+
+    protected function authenticate($credentials)
+    {
+        try {
+            if (!$token = JWTAuth::attempt($credentials)) {
+                $this->responseWithError("Unauthorized");
+            }
+        } catch (JWTException $e) {
+            $this->responseWithError($e->getMessage());
+        }
+
+        return $this->responseWithToken($token);
+    }
+
+    protected function disconnect()
+    {
+        try {
+            /* auth()->invalidate(); */
+            JWTAuth::parseToken()->invalidate();
+            return response()->json(["status" => "success", "message" => "User disconnected"]);
+        } catch (JWTException $e) {
+            return $this->responseWithError($e->getMessage());
+        }
+    }
+
+    protected function responseWithToken($token)
+    {
+        return response()->json([
+            "status" => "success",
+            "token" => $token,
+            "user" => auth()->user(),
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
+    }
+
+    protected function responseWithError($error)
+    {
+        return response()->json(["status" => "error", "error" => $error]);
     }
 }

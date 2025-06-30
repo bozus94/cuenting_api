@@ -17,7 +17,7 @@ trait hasAuthenticate
     ]);
 
     if ($validator->fails()) {
-      return $this->responseWithError($validator->messages());
+      $this->responseWithError($validator->messages());
     }
   }
 
@@ -30,7 +30,7 @@ trait hasAuthenticate
     ]);
 
     if ($validator->fails()) {
-      return $this->responseWithError($validator->messages());
+      $this->responseWithError($validator->messages());
     }
   }
 
@@ -41,7 +41,7 @@ trait hasAuthenticate
     ]);
 
     if ($validator->fails()) {
-      return $this->responseWithError($validator->messages());
+      $this->responseWithError($validator->messages());
     }
   }
 
@@ -49,13 +49,13 @@ trait hasAuthenticate
   {
     try {
       if (!$token = JWTAuth::attempt($credentials)) {
-        return $this->responseWithError("Unauthorized");
+        $this->responseWithError("Unauthorized");
       }
     } catch (JWTException $e) {
-      return $this->responseWithError($e->getMessage());
+      $this->responseWithError($e->getMessage());
     }
 
-    return $this->responseWithToken($token);
+    $this->responseWithToken($token);
   }
 
   protected function disconnect($token)
@@ -64,13 +64,13 @@ trait hasAuthenticate
       JWTAuth::invalidate($token);
       return response()->json(["status" => "success", "message" => "User disconnected"]);
     } catch (JWTException $e) {
-      return $this->responseWithError($e->getMessage());
+      $this->responseWithError($e->getMessage());
     }
   }
 
   protected function responseWithToken($token)
   {
-    return response()->json([
+    response()->json([
       "status" => "success",
       "token" => $token,
       "user" => Auth::user(),
@@ -80,6 +80,6 @@ trait hasAuthenticate
 
   protected function responseWithError($error)
   {
-    return response()->json(["status" => "error", "error" => $error]);
+    response()->json(["status" => "error", "error" => $error]);
   }
 }
