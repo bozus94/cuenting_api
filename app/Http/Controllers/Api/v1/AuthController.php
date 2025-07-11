@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\hasAuthenticate;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -46,10 +41,13 @@ class AuthController extends Controller
 
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json([
+            "status" => "success",
+            "user" => auth()->user()
+        ]);
     }
 
-    protected function loginValidate($data)
+    /*     protected function loginValidate($data)
     {
         Validator::make($data, [
             "email" => "required|email",
@@ -76,8 +74,14 @@ class AuthController extends Controller
     protected function authenticate($credentials)
     {
         try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                $this->responseWithError("Unauthorized");
+            if (!auth()->userOrFail()) {
+                return $this->responseWithError("Email or Password is wrong!");
+            }
+
+            $token = JWTAuth::attempt($credentials);
+
+            if (!$token) {
+                return $this->responseWithError("Unauthorized");
             }
         } catch (JWTException $e) {
             $this->responseWithError($e->getMessage());
@@ -89,7 +93,6 @@ class AuthController extends Controller
     protected function disconnect()
     {
         try {
-            /* auth()->invalidate(); */
             JWTAuth::parseToken()->invalidate();
             return response()->json(["status" => "success", "message" => "User disconnected"]);
         } catch (JWTException $e) {
@@ -110,5 +113,5 @@ class AuthController extends Controller
     protected function responseWithError($error)
     {
         return response()->json(["status" => "error", "error" => $error]);
-    }
+    } */
 }

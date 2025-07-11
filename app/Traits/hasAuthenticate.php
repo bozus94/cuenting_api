@@ -17,11 +17,11 @@ trait hasAuthenticate
     ]);
 
     if ($validator->fails()) {
-      $this->responseWithError($validator->messages());
+      return $this->responseWithError($validator->messages());
     }
   }
 
-  protected function validateRegister($data)
+  protected function registerValidate($data)
   {
     $validator = Validator::make($data, [
       "name" => "required|string",
@@ -41,7 +41,7 @@ trait hasAuthenticate
     ]);
 
     if ($validator->fails()) {
-      $this->responseWithError($validator->messages());
+      return  $this->responseWithError($validator->messages());
     }
   }
 
@@ -49,28 +49,38 @@ trait hasAuthenticate
   {
     try {
       if (!$token = JWTAuth::attempt($credentials)) {
-        $this->responseWithError("Unauthorized");
+        return $this->responseWithError("Email or Password is Wrong!");
       }
     } catch (JWTException $e) {
-      $this->responseWithError($e->getMessage());
+      return $this->responseWithError($e->getMessage());
     }
 
-    $this->responseWithToken($token);
+    return $this->responseWithToken($token);
   }
 
-  protected function disconnect($token)
+  /*   protected function disconnect($token)
   {
     try {
       JWTAuth::invalidate($token);
       return response()->json(["status" => "success", "message" => "User disconnected"]);
     } catch (JWTException $e) {
-      $this->responseWithError($e->getMessage());
+     return $this->responseWithError($e->getMessage());
+    }
+  } */
+
+  protected function disconnect()
+  {
+    try {
+      JWTAuth::parseToken()->invalidate();
+      return response()->json(["status" => "success", "message" => "User disconnected"]);
+    } catch (JWTException $e) {
+      return $this->responseWithError($e->getMessage());
     }
   }
 
   protected function responseWithToken($token)
   {
-    response()->json([
+    return response()->json([
       "status" => "success",
       "token" => $token,
       "user" => Auth::user(),
@@ -80,6 +90,6 @@ trait hasAuthenticate
 
   protected function responseWithError($error)
   {
-    response()->json(["status" => "error", "error" => $error]);
+    return response()->json(["status" => "error", "error" => $error]);
   }
 }
