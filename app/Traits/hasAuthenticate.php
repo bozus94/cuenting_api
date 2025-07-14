@@ -11,38 +11,26 @@ trait hasAuthenticate
 {
   protected function loginValidate($data)
   {
-    $validator = Validator::make($data, [
+    Validator::make($data, [
       "email" => "required|email",
       "password" => "required|min:8"
-    ]);
-
-    if ($validator->fails()) {
-      return $this->responseWithError($validator->messages());
-    }
+    ])->validate();
   }
 
   protected function registerValidate($data)
   {
-    $validator = Validator::make($data, [
+    Validator::make($data, [
       "name" => "required|string",
       "email" => "required|email|unique:users",
       "password" => "required|min:8"
-    ]);
-
-    if ($validator->fails()) {
-      $this->responseWithError($validator->messages());
-    }
+    ])->validate();
   }
 
   protected function tokenValidate($data)
   {
-    $validator = Validator::make($data, [
+    Validator::make($data, [
       "token" => "required",
-    ]);
-
-    if ($validator->fails()) {
-      return  $this->responseWithError($validator->messages());
-    }
+    ])->validate();
   }
 
   protected function authenticate($credentials)
@@ -57,16 +45,6 @@ trait hasAuthenticate
 
     return $this->responseWithToken($token);
   }
-
-  /*   protected function disconnect($token)
-  {
-    try {
-      JWTAuth::invalidate($token);
-      return response()->json(["status" => "success", "message" => "User disconnected"]);
-    } catch (JWTException $e) {
-     return $this->responseWithError($e->getMessage());
-    }
-  } */
 
   protected function disconnect()
   {
