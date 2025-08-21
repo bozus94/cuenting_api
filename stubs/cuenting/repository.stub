@@ -1,0 +1,8 @@
+<?php
+
+namespace DummyNamespace;
+
+class DummyClass
+{
+    // TODO: implementación base del repositorio
+}

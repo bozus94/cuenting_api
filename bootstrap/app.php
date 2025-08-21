@@ -1,12 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\JwtMiddleware;
 use Illuminate\Foundation\Application;
-use App\Http\Middleware\testMiddleware;
-use App\Http\Middleware\verifyTokenJwt;
 use Illuminate\Foundation\Configuration\Exceptions;
+
+/* middleware */
+use App\Http\Middleware\JwtMiddleware;
+use App\Http\Middleware\testMiddleware;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\verifyTokenJwt;
+
+/* commands */
+use App\Console\Commands\MakeDtoCommand;
+use App\Console\Commands\MakeServiceCommand;
+use App\Console\Commands\MakeRepositoryCommand;
+use App\Console\Commands\MakeRepositoryInterfaceCommand;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,8 +37,10 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withCommands([
-        \App\Console\Commands\MakeDtoCommand::class,
-        \App\Console\Commands\MakeServiceCommand::class,
+        MakeDtoCommand::class,
+        MakeServiceCommand::class,
+        MakeRepositoryCommand::class,
+        MakeRepositoryInterfaceCommand::class,
 
     ])
     ->create();

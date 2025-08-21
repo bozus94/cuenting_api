@@ -1,0 +1,8 @@
+<?php
+
+namespace DummyNamespace;
+
+interface DummyClass
+{
+    // TODO: define métodos del contrato del repositorio (ej. find, save, delete, paginate)
+}

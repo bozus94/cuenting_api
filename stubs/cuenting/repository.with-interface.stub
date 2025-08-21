@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyContractsNamespace\DummyInterface;
+
+class DummyClass implements DummyInterface
+{
+    // TODO: implementación base del repositorio
+}
