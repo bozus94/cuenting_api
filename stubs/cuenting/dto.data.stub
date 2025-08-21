@@ -1,0 +1,15 @@
+<?php
+
+namespace DummyNamespace;
+
+DummyPhpDoc
+
+final class DummyClass
+{
+  DummyProps
+
+  public function __construct() 
+  {
+   DummyCtor
+  }
+}
