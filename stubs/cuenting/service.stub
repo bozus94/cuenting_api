@@ -1,0 +1,8 @@
+<?php
+
+namespace DummyNamespace;
+
+class DummyClass
+{
+    // TODO: inyecta dependencias en el constructor si aplica
+}

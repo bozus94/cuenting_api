@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyContractsNamespace\DummyInterface;
+
+class DummyClass implements DummyInterface
+{
+    // TODO: inyecta dependencias en el constructor si aplica
+}

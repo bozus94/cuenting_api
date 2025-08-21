@@ -29,5 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withCommands([
         \App\Console\Commands\MakeDtoCommand::class,
+        \App\Console\Commands\MakeServiceCommand::class,
+
     ])
     ->create();
