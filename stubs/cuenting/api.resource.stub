@@ -1,0 +1,24 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class DummyClass extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'data' => [
+                'type' => 'resource',
+                'attributes' => [
+                    // TODO: mapea atributos de tu DTO
+                ],
+            ],
+            'meta' => new \stdClass(),
+            'links' => new \stdClass(),
+            'errors' => null,
+        ];
+    }
+}

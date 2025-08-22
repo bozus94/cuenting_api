@@ -1,0 +1,29 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+
+class DummyClass extends ResourceCollection
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'data' => $this->collection->map(function ($item) {
+                // Devuelve cada item en tu forma v1
+                return [
+                    'type' => 'resource',
+                    'attributes' => [
+                        // TODO
+                    ],
+                ];
+            }),
+            'meta' => [
+                // TODO: paginación si aplica
+            ],
+            'links' => new \stdClass(),
+            'errors' => null,
+        ];
+    }
+}
