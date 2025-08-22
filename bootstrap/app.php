@@ -15,6 +15,7 @@ use App\Console\Commands\MakeApiRequestCommand;
 use App\Console\Commands\MakeRepositoryCommand;
 use App\Console\Commands\MakeApiResourceCommand;
 use App\Console\Commands\MakeApiControllerCommand;
+use App\Console\Commands\MakeApiMiddlewareCommand;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Console\Commands\MakeRepositoryInterfaceCommand;
@@ -47,7 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
         MakeRepositoryInterfaceCommand::class,
         MakeApiRequestCommand::class,
         MakeApiControllerCommand::class,
-        MakeApiResourceCommand::class
-
+        MakeApiResourceCommand::class,
+        MakeApiMiddlewareCommand::class
     ])
     ->create();

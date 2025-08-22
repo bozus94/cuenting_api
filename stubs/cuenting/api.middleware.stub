@@ -1,0 +1,15 @@
+<?php
+
+namespace DummyNamespace;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class DummyClass
+{
+    public function handle(Request $request, Closure $next)
+    {
+        // TODO: lógica de middleware
+        return $next($request);
+    }
+}
