@@ -1,21 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\JwtMiddleware;
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
 
 /* middleware */
+use App\Http\Middleware\JwtMiddleware;
 use App\Http\Middleware\testMiddleware;
+use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\verifyTokenJwt;
-use App\Console\Commands\MakeDtoCommand;
-use App\Console\Commands\MakeServiceCommand;
 
 /* commands */
-use App\Console\Commands\MakeApiRequestCommand;
-use App\Console\Commands\MakeRepositoryCommand;
-use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
+use App\Console\Commands\MakeDtoCommand;
+use App\Console\Commands\MakeServiceCommand;
 use App\Console\Commands\MakeRepositoryInterfaceCommand;
+use App\Console\Commands\MakeRepositoryCommand;
+use App\Console\Commands\MakeApiControllerCommand;
+use App\Console\Commands\MakeApiRequestCommand;
+
 
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -43,6 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
         MakeRepositoryCommand::class,
         MakeRepositoryInterfaceCommand::class,
         MakeApiRequestCommand::class,
+        MakeApiControllerCommand::class
 
     ])
     ->create();
