@@ -1,0 +1,27 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class DummyClass extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true; // TODO: o integra Gates/Policies
+    }
+
+    public function rules(): array
+    {
+        return [
+            DummyRules
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            // 'field.rule' => 'custom message',
+        ];
+    }
+}
