@@ -20,26 +20,33 @@ class MakeServiceCommand extends GeneratorCommand
     protected function getStub()
     {
         $base = base_path('stubs/cuenting');
-        return $this->option('with-interface')
+        return $this->option('i')
             ? $base . '/service.with-interface.stub'
             : $base . '/service.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        $module = $this->option('module') ?: $this->getNameInput();
-        return $rootNamespace . '\\Services\\' . $module;
+        $module = $this->option('module');
+        if ($module = $this->option('module')) {
+            return $rootNamespace . '\\Services\\' . $module;
+        }
+        return $rootNamespace . '\\Services\\';
     }
 
     public function handle()
     {
         // Primero, generar interfaz si se pide
-        if ($this->option('with-interface')) {
-            $this->call('make:interface', [
+        if ($this->option('i')) {
+            $props =  $this->option('module') ? [
                 'name'     => $this->getNameInput(),
                 '--module' => $this->option('module'),
                 '--force'  => $this->option('force'),
-            ]);
+            ] : [
+                'name'     => $this->getNameInput(),
+                '--force'  => $this->option('force'),
+            ];
+            $this->call('make:service-interface', $props);
         }
 
         return parent::handle();
@@ -88,9 +95,9 @@ class MakeServiceCommand extends GeneratorCommand
     protected function getOptions()
     {
         return [
-            ['module',         null, InputOption::VALUE_REQUIRED, 'Module name (e.g. Expenses)'],
-            ['with-interface', null, InputOption::VALUE_NONE,     'Generate and implement interface'],
-            ['force',          null, InputOption::VALUE_NONE,     'Overwrite existing files'],
+            ['module',    null, InputOption::VALUE_REQUIRED, 'Module name (e.g. Expenses)'],
+            ['i',         null, InputOption::VALUE_NONE,     'Generate and implement interface'],
+            ['force',     null, InputOption::VALUE_NONE,     'Overwrite existing files'],
         ];
     }
 }

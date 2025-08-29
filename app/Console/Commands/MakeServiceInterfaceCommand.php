@@ -6,11 +6,11 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-class MakeInterfaceCommand extends GeneratorCommand
+class MakeServiceInterfaceCommand extends GeneratorCommand
 {
-    protected $name = 'make:interface';
+    protected $name =        'make:service-interface';
     protected $description = 'Create a new Service interface for Cuenting';
-    protected $type = 'Interface';
+    protected $type =        'Service Interface';
 
     public function __construct(Filesystem $files)
     {
@@ -24,8 +24,10 @@ class MakeInterfaceCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        $module = $this->option('module') ?: $this->getNameInput();
-        return $rootNamespace . '\\Services\\' . $module . '\\Contracts';
+        if ($module = $this->option('module')) {
+            return $rootNamespace . '\\Services\\' . $module . '\\Contracts';
+        }
+        return $rootNamespace . '\\Services\\' . '\\Contracts';
     }
 
     protected function buildClass($name)
