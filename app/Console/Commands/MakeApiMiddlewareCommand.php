@@ -28,7 +28,7 @@ class MakeApiMiddlewareCommand extends GeneratorCommand
     {
         $apiVersion = $this->option('api-version');
         if ($apiVersion) {
-            return $rootNamespace . "\\Http\\Api\\v.$apiVersion.\\Middlewares";
+            return $rootNamespace . "\\Http\\Api\\V.$apiVersion.\\Middlewares";
         }
         return $rootNamespace . "\\Http\\Api\\v1\\Middlewares";
     }

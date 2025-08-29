@@ -27,7 +27,7 @@ class MakeApiRequestCommand extends GeneratorCommand
 
         $apiVersion = $this->option('api-version');
         if ($apiVersion) {
-            return  $rootNamespace . '\\Http\\Api\\v' . $apiVersion . '\\Controllers';
+            return  $rootNamespace . '\\Http\\Api\\V1' . $apiVersion . '\\Controllers';
         }
         return $rootNamespace . '\\Http\\Api\\V1\\Requests';
     }

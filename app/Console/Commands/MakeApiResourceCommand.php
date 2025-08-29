@@ -29,7 +29,7 @@ class MakeApiResourceCommand extends GeneratorCommand
     {
         $apiVersion = $this->option('api-version');
         if ($apiVersion) {
-            return  $rootNamespace . '\\Http\\Api\\v' . $apiVersion . '\\Resources';
+            return  $rootNamespace . '\\Http\\Api\V' . $apiVersion . '\\Resources';
         }
         return $rootNamespace . '\\Http\\Api\\V1\\Resources';
     }
