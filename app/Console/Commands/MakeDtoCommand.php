@@ -31,13 +31,21 @@ class MakeDtoCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        $module = $this->option('module') ?: $this->getNameInput();
+        $module = $this->option('module');
         $type   = $this->option('type');
 
+        if ($module) {
+            return match ($type) {
+                'request'  => $rootNamespace . '\\DTOs\\' . $module . '\\Requests',
+                'response' => $rootNamespace . '\\DTOs\\' . $module . '\\Responses',
+                default    => $rootNamespace . '\\DTOs\\' . $module,
+            };
+        }
+
         return match ($type) {
-            'request'  => $rootNamespace . '\\DTOs\\' . $module . '\\Requests',
-            'response' => $rootNamespace . '\\DTOs\\' . $module . '\\Responses',
-            default    => $rootNamespace . '\\DTOs\\' . $module,
+            'request'  => $rootNamespace . '\\DTOs\\Requests',
+            'response' => $rootNamespace . '\\DTOs\\Responses',
+            default    => $rootNamespace . '\\DTOs',
         };
     }
 
@@ -58,9 +66,9 @@ class MakeDtoCommand extends GeneratorCommand
         // Sufijo de clase según tipo
         $type = $this->option('type');
         $suffix = match ($type) {
-            'request'  => 'RequestDto',
-            'response' => 'ResponseDto',
-            default    => 'Dto',
+            'request'  => 'RequestDTO',
+            'response' => 'ResponseDTO',
+            default    => 'DTO',
         };
 
         // Asegurar sufijo en el nombre final si el dev no lo puso
@@ -116,14 +124,14 @@ class MakeDtoCommand extends GeneratorCommand
         // Permite pasar solo "Expense" y que se coloque el sufijo según type
         $type = $this->option('type');
         $suffix = match ($type) {
-            'request'  => 'RequestDto',
-            'response' => 'ResponseDto',
-            default    => 'Dto',
+            'request'  => 'RequestDTO',
+            'response' => 'ResponseDTO',
+            default    => 'DTO',
         };
 
-        $name = preg_replace('/Dto$/', '', $name);
-        $name = preg_replace('/RequestDto$/', '', $name);
-        $name = preg_replace('/ResponseDto$/', '', $name);
+        $name = preg_replace('/DTO$/', '', $name);
+        $name = preg_replace('/RequestDTO$/', '', $name);
+        $name = preg_replace('/ResponseDTO$/', '', $name);
 
         return parent::qualifyClass($name . $suffix);
     }
