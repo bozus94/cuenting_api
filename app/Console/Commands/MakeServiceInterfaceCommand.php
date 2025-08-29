@@ -27,7 +27,7 @@ class MakeServiceInterfaceCommand extends GeneratorCommand
         if ($module = $this->option('module')) {
             return $rootNamespace . '\\Services\\' . $module . '\\Contracts';
         }
-        return $rootNamespace . '\\Services\\' . '\\Contracts';
+        return $rootNamespace . '\\Services\\Contracts';
     }
 
     protected function buildClass($name)

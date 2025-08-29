@@ -24,8 +24,10 @@ class MakeRepositoryInterfaceCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        $module = $this->option('module') ?: $this->getNameInput();
-        return $rootNamespace . '\\Repositories\\' . $module . '\\Contracts';
+        if ($module = $this->option('module')) {
+            return $rootNamespace . '\\Repositories\\' . $module . '\\Contracts';
+        }
+        return $rootNamespace . '\\Repositories\\Contracts';
     }
 
     protected function buildClass($name)

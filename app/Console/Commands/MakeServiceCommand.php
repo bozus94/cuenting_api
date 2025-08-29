@@ -31,7 +31,7 @@ class MakeServiceCommand extends GeneratorCommand
         if ($module = $this->option('module')) {
             return $rootNamespace . '\\Services\\' . $module;
         }
-        return $rootNamespace . '\\Services\\';
+        return $rootNamespace . '\\Services';
     }
 
     public function handle()
@@ -56,9 +56,9 @@ class MakeServiceCommand extends GeneratorCommand
     {
         $class = parent::buildClass($name);
 
-        $module     = $this->option('module') ?: $this->getNameInput();
+        $module     = $this->option('module');
         $baseName   = $this->baseName();
-        $contracts  = "App\\Services\\{$module}\\Contracts";
+        $contracts  = $module ? "App\\Services\\{$module}\\Contracts" : "App\\Services\\Contracts";
         $ifaceName  = "{$baseName}ServiceInterface";
 
         $class = str_replace(
@@ -75,7 +75,6 @@ class MakeServiceCommand extends GeneratorCommand
             }
             return $m[0];
         }, $class);
-
         return $class;
     }
 

@@ -20,25 +20,32 @@ class MakeRepositoryCommand extends GeneratorCommand
     protected function getStub()
     {
         $base = base_path('stubs/cuenting');
-        return $this->option('with-interface')
+        return $this->option('i')
             ? $base . '/repository.with-interface.stub'
             : $base . '/repository.stub';
     }
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        $module = $this->option('module') ?: $this->getNameInput();
-        return $rootNamespace . '\\Repositories\\' . $module;
+        if ($module = $this->option('module')) {
+            return $rootNamespace . '\\Repositories\\' . $module;
+        }
+        return $rootNamespace . '\\Repositories';
     }
 
     public function handle()
     {
-        if ($this->option('with-interface')) {
-            $this->call('make:repository-interface', [
+        if ($this->option('i')) {
+            $props = $this->option('module') ? [
                 'name'     => $this->getNameInput(),
                 '--module' => $this->option('module'),
                 '--force'  => $this->option('force'),
-            ]);
+            ] : [
+                'name'     => $this->getNameInput(),
+                '--force'  => $this->option('force'),
+            ];
+
+            $this->call('make:repository-interface', $props);
         }
 
         return parent::handle();
@@ -48,25 +55,26 @@ class MakeRepositoryCommand extends GeneratorCommand
     {
         $class = parent::buildClass($name);
 
-        $module     = $this->option('module') ?: $this->getNameInput();
+        $module     = $this->option('module');
         $baseName   = $this->baseName();
-        $contracts  = "App\\Repositories\\{$module}\\Contracts";
-        $ifaceName  = "{$baseName}RepositoryInterface";
+        $contracts  = $module
+            ? "App\\Repositories\\{$module}\\Contracts"
+            : "App\\Repositories\\Contracts";
 
+        $ifaceName  = "{$baseName}RepositoryInterface";
         $class = str_replace(
             ['DummyContractsNamespace', 'DummyInterface'],
             [$contracts, $ifaceName],
             $class
         );
-
         // Asegurar sufijo Repository
-        $class = preg_replace_callback('/class\s+([A-Za-z0-9_]+)/', function ($m) {
+        /*         $class = preg_replace_callback('/class\s+([A-Za-z0-9_\s]+)/', function ($m) {
             $base = $m[1];
             if (!str_ends_with($base, 'Repository')) {
                 return 'class ' . $base . 'Repository';
             }
             return $m[0];
-        }, $class);
+        }, $class); */
 
         return $class;
     }
@@ -88,7 +96,7 @@ class MakeRepositoryCommand extends GeneratorCommand
     {
         return [
             ['module',         null, InputOption::VALUE_REQUIRED, 'Module name (e.g. Expenses)'],
-            ['with-interface', null, InputOption::VALUE_NONE,     'Generate and implement interface'],
+            ['i',              null, InputOption::VALUE_NONE,     'Generate and implement interface'],
             ['force',          null, InputOption::VALUE_NONE,     'Overwrite existing files'],
         ];
     }
