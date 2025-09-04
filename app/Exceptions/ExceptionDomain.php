@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use App\Traits\CuentingResponse;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 abstract class ExceptionDomain extends Exception
 {
