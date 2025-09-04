@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\Cuenting\AuthException;
+use App\Enums\AuthErrors as Error;
 use Closure;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,22 +23,14 @@ class verifyTokenJwt
             JWTAuth::parseToken()->authenticate();
         } catch (Exception $e) {
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
-                return $this->responseWithError("Token is Invalid");
+                throw new AuthException(Error::AUTH_TOKEN_INVALID->name, 401, $e->getTrace());
             } else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-                return $this->responseWithError("Token is Expired");
+                throw new AuthException(Error::AUTH_TOKEN_EXPIRED->name, 401, $e->getTrace());
             } else {
-                return $this->responseWithError("Authorization Token not found");
+                throw new AuthException(Error::AUTH_TOKEN_NOT_FOUND->name, 401, $e->getTrace());;
             }
         }
 
         return $next($request);
-    }
-
-    public function responseWithError($error)
-    {
-        return response()->json([
-            "status" => "error",
-            "Error" => $error
-        ], 401);
     }
 }
