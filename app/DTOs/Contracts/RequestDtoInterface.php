@@ -4,6 +4,6 @@ namespace App\DTOs\Contracts;
 
 interface RequestDtoInterface
 {
-  public function fromArray(): self;
+  public static function fromArray(array $data);
   public function toArray(): array;
 }
