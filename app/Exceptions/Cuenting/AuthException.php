@@ -2,12 +2,11 @@
 
 namespace App\Exceptions\Cuenting;
 
-use App\Exceptions\ExceptionDomain;
+use App\Exceptions\BaseException;
 use App\Enums\AuthErrors as Error;
 
-class AuthException extends ExceptionDomain
+class AuthException extends BaseException
 {
-
     public function mapMessages(): string
     {
         return match ($this->codeDomain) {
