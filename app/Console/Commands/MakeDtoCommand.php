@@ -23,30 +23,19 @@ class MakeDtoCommand extends GeneratorCommand
         $type = $this->option('type');
 
         return match ($type) {
-            'request'  => $base . '/dto.request.stub',
-            'response' => $base . '/dto.response.stub',
+            'request'  => $base . '/dto.type.stub',
+            'response' => $base . '/dto.type.stub',
             default    => $base . '/dto.data.stub',
         };
     }
 
     protected function getDefaultNamespace($rootNamespace)
     {
-        $module = $this->option('module');
-        $type   = $this->option('type');
-
-        if ($module) {
-            return match ($type) {
-                'request'  => $rootNamespace . '\\DTOs\\' . $module . '\\Requests',
-                'response' => $rootNamespace . '\\DTOs\\' . $module . '\\Responses',
-                default    => $rootNamespace . '\\DTOs\\' . $module,
-            };
+        if ($module = $this->option('module')) {
+            return $rootNamespace . '\\DTOs\\' . $module;
         }
 
-        return match ($type) {
-            'request'  => $rootNamespace . '\\DTOs\\Requests',
-            'response' => $rootNamespace . '\\DTOs\\Responses',
-            default    => $rootNamespace . '\\DTOs',
-        };
+        return $rootNamespace . '\\DTOs';
     }
 
     protected function buildClass($name)
@@ -62,20 +51,29 @@ class MakeDtoCommand extends GeneratorCommand
             [$phpDoc, $propsBlock, $ctorParams],
             $class
         );
+        // interface de clase según tipo
+        if ($type = $this->option('type')) {
+            $interface = match ($type) {
+                'request'  => 'RequestDtoInterface',
+                'response' => 'ResponseDtoInterface',
+                default    => 'DTO',
+            };
 
-        // Sufijo de clase según tipo
-        $type = $this->option('type');
-        $suffix = match ($type) {
-            'request'  => 'RequestDTO',
-            'response' => 'ResponseDTO',
-            default    => 'DTO',
-        };
+            $contracts  = "App\\DTOs\\Contracts";
+            $ifaceName  = $interface;
 
-        // Asegurar sufijo en el nombre final si el dev no lo puso
-        $class = preg_replace_callback('/class\s+([A-Za-z0-9_]+)/', function ($m) use ($suffix) {
+            $class = str_replace(
+                ['DummyContractsNamespace', 'DummyInterface'],
+                [$contracts, $ifaceName],
+                $class
+            );
+        }
+
+        // Asegurar sufijo DTO
+        $class = preg_replace_callback('/class\s+([A-Za-z0-9_]+)/', function ($m) {
             $base = $m[1];
-            if (!str_ends_with($base, $suffix)) {
-                return 'class ' . $base . $suffix;
+            if (!str_ends_with($base, 'DTO')) {
+                return 'class ' . $base . 'DTO';
             }
             return $m[0];
         }, $class);
@@ -87,7 +85,7 @@ class MakeDtoCommand extends GeneratorCommand
     {
         if ($props === '') {
             return [
-                "/**\n *DTO sin propiedades declaradas.\n */ ",
+                "/**\n *Sin propiedades declaradas.\n */ ",
                 "// TODO: agrega propiedades\n",
                 "// TODO: agrega parámetros de constructor si es necesario\n "
             ];
@@ -113,26 +111,9 @@ class MakeDtoCommand extends GeneratorCommand
     {
         return [
             ['module',  null, InputOption::VALUE_REQUIRED, 'Module name (e.g. Expenses)'],
-            ['type',    null, InputOption::VALUE_REQUIRED, 'DTO kind: data|request|response', 'data'],
+            ['type',    null, InputOption::VALUE_REQUIRED, 'DTO kind: data|request|response'],
             ['props',   null, InputOption::VALUE_OPTIONAL, 'Command list of props "name:type,other:?string"', ''],
             ['force',   null, InputOption::VALUE_NONE,     'Overwrite existing files'],
         ];
-    }
-
-    protected function qualifyClass($name)
-    {
-        // Permite pasar solo "Expense" y que se coloque el sufijo según type
-        $type = $this->option('type');
-        $suffix = match ($type) {
-            'request'  => 'RequestDTO',
-            'response' => 'ResponseDTO',
-            default    => 'DTO',
-        };
-
-        $name = preg_replace('/DTO$/', '', $name);
-        $name = preg_replace('/RequestDTO$/', '', $name);
-        $name = preg_replace('/ResponseDTO$/', '', $name);
-
-        return parent::qualifyClass($name . $suffix);
     }
 }

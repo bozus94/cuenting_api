@@ -1,0 +1,17 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyContractsNamespace\DummyInterface;
+
+DummyPhpDoc
+
+final class DummyClass implements DummyInterface 
+{
+  DummyProps
+
+  public function __construct() 
+  {
+   DummyCtor
+  }
+}
