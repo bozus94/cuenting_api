@@ -12,7 +12,7 @@ final class CreateCategoryDTO implements RequestDtoInterface
 {
   public function __construct(
     public readonly string $name,
-    public readonly string $userId = '',
+    public string $userId = '',
     public readonly ?bool $isActive = true,
     public readonly ?bool $isDefault = false,
   ) {}
@@ -21,8 +21,6 @@ final class CreateCategoryDTO implements RequestDtoInterface
   {
     return new self(
       name: $data["name"],
-      isActive: $data["is_active"] ?? null,
-      isDefault: $data["is_default"] ?? null,
     );
   }
 
@@ -30,13 +28,18 @@ final class CreateCategoryDTO implements RequestDtoInterface
   {
     return [
       "name" => $this->name,
-      "is_active" => $this->isActive,
-      "is_default" => $this->isDefault
+      "user_id" => $this->userId,
+      "is_active" => $this->isActive
     ];
   }
 
   public function setUserId(string $id): void
   {
     $this->userId = $id;
+  }
+
+  public function setIsActive(): void
+  {
+    $this->isActive = true;
   }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use Illuminate\Support\Facades\DB;
 use App\Models\ExpenseCategory;
 use App\Repositories\Contracts\ExpenseCategoryRepositoryInterface;
 

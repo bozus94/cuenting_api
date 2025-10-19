@@ -4,7 +4,7 @@ namespace App\Http\Api\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ExpenseCategoryRequest extends FormRequest
+class CreateExpenseCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,14 +14,7 @@ class ExpenseCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '// TODO: define reglas'
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            // 'field.rule' => 'custom message',
+            "name" => ["required", "max:100", "unique:expense_categories,name"]
         ];
     }
 }

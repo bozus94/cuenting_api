@@ -33,7 +33,6 @@ class AuthService implements AuthServiceInterface
                     throw new AuthException(AuthErrors::AUTH_EMAIL_TAKEN->name, 422);
                 }
                 $user = $this->repo->create($dto->toArray());
-
                 return UserDTO::fromModel($user);
             });
         } catch (Throwable $th) {

@@ -11,6 +11,7 @@ class DomainException extends BaseException
     {
         return match ($this->codeDomain) {
             Error::ENTITY_ALREADY_EXIST->name => Error::ENTITY_ALREADY_EXIST->value,
+            Error::REGISTER_PROCESSING_OPERATION->name => Error::REGISTER_PROCESSING_OPERATION->value,
             default => "Has occurred error domain"
         };
     }

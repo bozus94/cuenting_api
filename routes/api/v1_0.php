@@ -11,3 +11,4 @@ Route::post('/', function (Request $request) {
 });
 
 require base_path("routes/api/v1/auth_routes.php");
+require base_path("routes/api/v1/categories_routes.php");

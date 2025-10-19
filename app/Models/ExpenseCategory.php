@@ -8,6 +8,7 @@ class ExpenseCategory extends Model
 {
     protected $fillable = [
         "name",
+        "user_id",
         "is_active",
         "is_default",
         "deleted_at",
