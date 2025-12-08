@@ -8,15 +8,25 @@ use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\DB;
 use App\DTOs\Category\CreateCategoryDTO;
 use App\DTOs\Category\ResponseCategoryDTO;
+use App\DTOs\expense\QueryCategoryDTO;
 use App\Exceptions\Cuenting\DomainException;
 use App\Services\Contracts\ExpenseCategoryServiceInterface;
 use App\Repositories\Contracts\ExpenseCategoryRepositoryInterface;
-
+use PhpParser\Node\Stmt\TryCatch;
 
 class ExpenseCategoryService implements ExpenseCategoryServiceInterface
 {
 
     public function __construct(public ExpenseCategoryRepositoryInterface $repo) {}
+
+    public function list(QueryCategoryDTO $dto, int $userId)
+    {
+        try {
+            return $this->repo->queryForUser($userId, $dto);
+        } catch (\Throwable $th) {
+            throw new DomainException(DomainErrors::Error_PROCESSING_OPERATION->name);
+        }
+    }
 
     public function createCategory(CreateCategoryDTO $dto): ResponseCategoryDTO
     {
